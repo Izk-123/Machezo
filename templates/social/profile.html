@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'posts' %}" class="btn btn-light">Back to feeds</a>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-8 col-sm-12 border-bottom px-5 pt-3">
+            <!-- Card with header and footer -->
+            <div class="card shadow-sm">
+                <div class="card-header">Profile</div>
+                <div class="card-body">
+                    <center>
+                        <img src="{{ profile.picture.url }}" alt="" class="rounded-circle" width="100" height="100">
+                        {% if profile.first_name or profile.middle_name or profile.last_name %}
+                        <h3 class="py-4">
+                            {{ profile.first_name }} {{ profile.middle_name }} {{ profile.last_name }}
+                            <span>
+                                {% if request.user == user %}
+                                <a href="{% url 'profile-edit' profile.pk %}" style="color: black;"><i
+                                        class="far fa-edit"></i></a>
+                                {% endif %}
+                            </span>
+                        </h3>
+                        {% else %}
+                    </center>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <h3 class="py-4">
+                                {{ user.username }}
+                                <span>
+                                    {% if request.user == user %}
+                                    <a href="{% url 'profile-edit' profile.pk %}" style="color: black;"><i
+                                            class="far fa-edit"></i></a>
+                                    {% endif %}
+                                </span>
+                            </h3>
+                        </li>
+                        {% endif %}
+
+                        {% if profile.location %}
+                        <li class="list-group-item">{{ profile.location }}</li>
+                        {% endif %}
+
+                        {% if profile.bio %}
+                        <li class="list-group-item">{{ profile.bio }}</li>
+                        {% endif %}
+
+                        {% if profile.birth_date %}
+                        <li class="list-group-item">{{ profile.birth_date }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="mb-3">
+                        <a href="{% url 'list-followers' profile.pk %}" class="post-link">Followers: {{ number_of_followers }} </a>
+                        {% if user == request.user %}
+                        {% else %}
+                        {% if is_following %}
+                        <form method="POST" action="{% url 'remove-followers' profile.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{% url 'add-followers' profile.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-success" type="submit">Follow</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div><!-- End Card with header and footer -->
+        </div>
+    </div>
+
+    {% for post in posts %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 border-bottom position-relative">
+            <div>
+                <a href="{% url 'profile' post.author.profile.pk %}">
+                    <img src="{{ post.author.profile.picture.url }}" alt="" class="rounded-circle post-img" height="30"
+                        width="30" />
+                </a>
+                <p class="lead">
+                    <a href="{% url 'profile' post.author.profile.pk %}" class="text-primary post-link">@{{ post.author }}</a>
+                    {{ post.created_on }}
+                </p>
+            </div>
+            <a href="{% url 'post' post.pk %}" class="stretched-link">
+                {% if post.body %}
+                <div class="body">
+                    <p class="lead"> {{ post.body }} </p>
+                </div>
+                {% endif %}
+                
+                {% if post.image.count > 0 %}
+                <div class="row">
+                    {% for img in post.image.all %}
+                    <div class="col-md-4 col-xs-12">
+                        <img src="{{ img.image.url }}" alt="" class="img-fluid post-image" />
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </a>
+            <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn default-btn">
+                        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                        <span> {{ post.likes.all.count }} </span>
+                    </button>
+                </form>
+                <form method="POST" action="{% url 'dislike' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn default-btn">
+                        <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                        <span> {{ post.dislikes.all.count }} </span>
+                    </button>
+                </form>
+            </div>
+            <hr>
+        </div>
+    </div>
+    {% empty %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <h3>No posts available</h3>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

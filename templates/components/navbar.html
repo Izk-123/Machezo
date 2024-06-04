@@ -1,0 +1,48 @@
+{% load custom_tags %}
+
+<nav class="navbar navbar-expand-lg navbar-light ">
+    <div class="container">
+        <a class="navbar-brand" {% if user.is_authenticated %} href="{% url 'posts' %}" {% else %}
+            href="{% url 'index' %}" {% endif %}>
+            <i class="bi chat-fill"></i> Machezo</a>
+            {% if user.is_authenticated %}
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse flex-row-reverse" id="navbar">
+            <ul class="nav navbar-nav">
+                <li class="nav-item"> 
+                    <a class="nav-link" href="{% url 'inbox' %}"><i class="fa fa-inbox" aria-hidden="true"></i></a>
+                </li>
+                <li class="nav-item">
+                    {% show_notifications %}
+                </li>
+                <!-- Drop down Menu -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        {{ request.user.username }} <span class="caret"></span> 
+                    </a>
+                    <div class="dropdown-menu"> 
+                        <a href="{% url 'profile' request.user.profile.pk %}" class="dropdown-item">
+                            <img src="{{ request.user.profile.picture.url }}" alt="" class="rounded-circle post-img" height="20"
+                                width="20" />
+                            Profile
+                        </a> 
+                        <a href="#" class="dropdown-item"><i class="fa fa-bolt" aria-hidden="true"></i> Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url 'account_logout' %}" class="dropdown-item"><i class="fa fa-sign-out" aria-hidden="true"></i> Sign Out</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="d-flex form-inline ml-auto mt-3 mt-lg-0" method="GET" action="{% url 'profile-search' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search..." name="query" value="{{ request.GET.query }}">
+                    <button type="submit" class="btn default-btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</nav>

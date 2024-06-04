@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <a href="{% url 'posts' %}" class="btn btn-light">Back to feeds</a>
+        </div>
+    </div>
+    {% for profile in profile_list %}
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-sm-12 border-bottom">
+            <div>
+                <a href="{% url 'profile' profile.pk %}">
+                    <img src="{{ profile.picture.url }}" alt="" class="round-circle post-img" height="30" width="30" />
+                </a>
+                <p class="lead">
+                    <a href="{% url 'profile' profile.pk %}" class="text-primary post-link">@{{ profile.user }}</a>
+                </p>
+            </div>
+            {% if profile.location %}
+            {{ profile.location }}
+            {% endif %}
+            <p>Followers: {{ profile.followers.all.count }} </p>
+            <hr>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

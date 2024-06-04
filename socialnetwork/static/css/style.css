@@ -1,0 +1,81 @@
+.default-btn{
+    background-color:transparent; 
+    border: none;
+    box-shadow: none;
+}
+
+.stretched-link {
+    color: black;
+}
+
+.stretched-link:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.post-link{
+    text-decoration: none;
+}
+
+.post-link:hover{
+    text-decoration: none;
+    color: springgreen;
+}
+
+.post-img{
+    float: left;
+    margin-right: 1rem;
+}
+
+.img-fluid{
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.empty-text{
+    color: #777;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.send-message{
+    background-color: #f3f3f3;
+    border-radius: 30px;
+    padding: 10px 25px;
+    width: 35%;
+}
+
+.receive-message{
+    background-color: rgb(1, 196, 255);
+    color: #fff;
+    border-radius: 30px;
+    padding: 10px 25px;
+    width: 35%;
+    float: right;
+}
+.message-receiver-container{
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.message-sender-container{
+    margin-right: auto;
+    margin-left: 0;
+    float: right;
+}
+
+.message-img{
+    border-radius: 10px;
+    max-width: 35%;
+    height: auto;
+}
+
+.child-comment{
+    margin-left: 2rem;
+}
+
+.shared-post{
+    margin-left: 30px;
+}

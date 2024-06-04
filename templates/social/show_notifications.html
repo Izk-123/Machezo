@@ -1,0 +1,53 @@
+<div class="dropdown">
+    {% if notifications.count == 0 %}
+    {% else %}
+    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-bell" aria-hidden="true"></i>
+        <span class="text-danger">{{ notifications.count }}</span>
+         <span class="caret"></span>
+    </a>
+    <div class="dropdown-menu">
+        {% for notification in notifications %}
+            {% if notification.post %}
+                {% if notification.notification_type == 1 %}
+                    <a href="{% url 'post-notification' notification.pk notification.post.pk %}" class="dropdown-item">
+                        @{{ notification.from_user }} liked your post
+                        <span onclick="removeNotification('{% url 'delete-notification' notification.pk %}', '{{ request.path }}')">&times;</span>
+                    </a>
+                {% elif notification.notification_type == 2 %}
+                    <a href="{% url 'post-notification' notification.pk notification.post.pk %}" class="dropdown-item">
+                        @{{ notification.from_user }} commented on your post
+                        <span onclick="removeNotification('{% url 'delete-notification' notification.pk %}', '{{ request.path }}')">&times;</span>
+                    </a>
+                {% endif %}
+            {% elif notification.comment %}
+                {% if notification.notification_type == 1 %}
+                    <a href="{% url 'post-notification' notification.pk notification.comment.post.pk %}" class="dropdown-item">
+                        @{{ notification.from_user }} liked your comment
+                        <span onclick="removeNotification('{% url 'delete-notification' notification.pk %}', '{{ request.path }}')">&times;</span>
+                    </a>
+                {% elif notification.notification_type == 2 %}
+                    <a href="{% url 'post-notification' notification.pk notification.comment.post.pk %}" class="dropdown-item">
+                        @{{ notification.from_user }} replied to your comment
+                        <span onclick="removeNotification('{% url 'delete-notification' notification.pk %}', '{{ request.path }}')">&times;</span>
+                    </a>
+                {% endif %}
+            {% elif notification.thread %}
+                {% if notification.notification_type == 4 %}
+                    <a href="{% url 'thread-notification' notification.pk notification.thread.pk %}" class="dropdown-item">
+                        @{{ notification.from_user }} has sent you a message
+                        <span onclick="removeNotification('{% url 'delete-notification' notification.pk %}', '{{ request.path }}')">&times;</span>
+                    </a>
+                {% endif %}
+            {% else %}
+                {% if notification.notification_type == 3 %}
+                    <a href="{% url 'follow-notification' notification.pk notification.from_user.profile.pk %}" class="dropdown-item">
+                        @{{ notification.from_user }} has started following you
+                        <span onclick="removeNotification('{% url 'delete-notification' notification.pk %}', '{{ request.path }}')">&times;</span>
+                    </a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
